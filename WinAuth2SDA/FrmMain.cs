@@ -456,13 +456,13 @@ namespace WinAuth2SDA
 
         private void tsGithub_Click(object sender, EventArgs e)
         {
-            const string target = "https://github.com/chr233/ASFProfileConverter";
+            const string target = "https://github.com/chr233/WinAuth2SDA";
             OpenLink(target);
         }
 
         private void tsVersion_Click(object sender, EventArgs e)
         {
-            const string target = "https://github.com/chr233/ASFProfileConverter/releases";
+            const string target = "https://github.com/chr233/WinAuth2SDA/releases";
             OpenLink(target);
         }
 
