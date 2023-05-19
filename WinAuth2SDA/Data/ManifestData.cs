@@ -17,7 +17,7 @@ namespace WinAuth2SDA.Data
         public bool PeriodicChecking { get; set; }
 
         [JsonPropertyName("periodic_checking_interval")]
-        public int PeriodicCheckingInterval { get; set; }
+        public int PeriodicCheckingInterval { get; set; } = 3000;
 
         [JsonPropertyName("periodic_checking_checkall")]
         public bool PeriodicCheckingCheckall { get; set; }
