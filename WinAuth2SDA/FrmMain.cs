@@ -17,29 +17,28 @@ namespace WinAuth2SDA
 {
     public partial class FrmMain : Form
     {
-        private HttpClient _httpClient { get; init; }
+        //private HttpClient _httpClient { get; init; }
 
         public FrmMain()
         {
             InitializeComponent();
 
-            var proxy = new WebProxy {
-                Address = new Uri("http://192.168.31.45:8080"),
-            };
+            //var proxy = new WebProxy {
+            //    Address = new Uri("http://192.168.31.45:8080"),
+            //};
 
-            var httpClientHandler = new HttpClientHandler {
-                Proxy = proxy,
-            };
+            //var httpClientHandler = new HttpClientHandler {
+            //    Proxy = proxy,
+            //};
 
-            _httpClient = new HttpClient(handler: httpClientHandler) {
-                BaseAddress = new Uri("https://api.steampowered.com"),
-                DefaultRequestHeaders =
-                {
-                    { "User-Agent", "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; Google Nexus 4 - 4.1.1 - API 16 - 768x1280 Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30" },
-                },
+            //_httpClient = new HttpClient(handler: httpClientHandler) {
+            //    BaseAddress = new Uri("https://api.steampowered.com"),
+            //    DefaultRequestHeaders =
+            //    {
+            //        { "User-Agent", "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; Google Nexus 4 - 4.1.1 - API 16 - 768x1280 Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30" },
+            //    },
 
-            };
-
+            //};
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -242,22 +241,22 @@ namespace WinAuth2SDA
                             }
                         }
 
-                        if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(loginSecure))
-                        {
-                            var payload = new Dictionary<string, string>(1) {
-                            { "access_token", authSession.OAuthToken },
-                        };
+                        //if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(loginSecure))
+                        //{
+                        //    var payload = new Dictionary<string, string>(1) {
+                        //    { "access_token", authSession.OAuthToken },
+                        //};
 
-                            using var request = new HttpRequestMessage(HttpMethod.Post, "/IMobileAuthService/GetWGToken/v0001") {
-                                Content = new FormUrlEncodedContent(payload)
-                            };
-                            var response = await _httpClient.SendAsync(request);
-                            var stream = await response.Content.ReadAsStreamAsync();
-                            var tokenData = await JsonSerializer.DeserializeAsync<IMobileAuthServiceResponse>(stream);
+                        //    using var request = new HttpRequestMessage(HttpMethod.Post, "/IMobileAuthService/GetWGToken/v0001") {
+                        //        Content = new FormUrlEncodedContent(payload)
+                        //    };
+                        //    var response = await _httpClient.SendAsync(request);
+                        //    var stream = await response.Content.ReadAsStreamAsync();
+                        //    var tokenData = await JsonSerializer.DeserializeAsync<IMobileAuthServiceResponse>(stream);
 
-                            login = tokenData?.Response?.Token;
-                            loginSecure = tokenData?.Response?.TokenSecure;
-                        }
+                        //    login = tokenData?.Response?.Token;
+                        //    loginSecure = tokenData?.Response?.TokenSecure;
+                        //}
 
                         if (!long.TryParse(authSession.SteamId, out long steamId))
                         {
