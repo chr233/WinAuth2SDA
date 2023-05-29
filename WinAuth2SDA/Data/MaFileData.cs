@@ -1,46 +1,46 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace WinAuth2SDA.Data
 {
     public sealed record MaFileData
     {
-        [JsonPropertyName("shared_secret")]
+        [JsonProperty(PropertyName = "shared_secret")]
         public string? SharedSecret { get; set; }
 
-        [JsonPropertyName("serial_number")]
+        [JsonProperty(PropertyName = "serial_number")]
         public string? SerialNumber { get; set; }
 
-        [JsonPropertyName("revocation_code")]
+        [JsonProperty(PropertyName = "revocation_code")]
         public string? RevocationCode { get; set; }
 
-        [JsonPropertyName("uri")]
+        [JsonProperty(PropertyName = "uri")]
         public string? Uri { get; set; }
 
-        [JsonPropertyName("server_time")]
-        public long ServerTime { get; set; }
+        [JsonProperty(PropertyName = "server_time")]
+        public ulong ServerTime { get; set; }
 
-        [JsonPropertyName("account_name")]
+        [JsonProperty(PropertyName = "account_name")]
         public string? AccountName { get; set; }
 
-        [JsonPropertyName("token_gid")]
+        [JsonProperty(PropertyName = "token_gid")]
         public string? TokenGid { get; set; }
 
-        [JsonPropertyName("identity_secret")]
+        [JsonProperty(PropertyName = "identity_secret")]
         public string? IdentitySecret { get; set; }
 
-        [JsonPropertyName("secret_1")]
+        [JsonProperty(PropertyName = "secret_1")]
         public string? Secret1 { get; set; }
 
-        [JsonPropertyName("status")]
-        public int status { get; set; }
+        [JsonProperty(PropertyName = "status")]
+        public int Status { get; set; }
 
-        [JsonPropertyName("device_id")]
+        [JsonProperty(PropertyName = "device_id")]
         public string? DeviceId { get; set; }
 
-        [JsonPropertyName("fully_enrolled")]
+        [JsonProperty(PropertyName = "fully_enrolled")]
         public bool FullyEnrolled { get; set; } = true;
 
-        [JsonPropertyName("Session")]
+        [JsonProperty(PropertyName = "Session")]
         public SessionData? Session { get; set; }
     }
 }

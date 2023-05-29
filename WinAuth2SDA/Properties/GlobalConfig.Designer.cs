@@ -12,7 +12,7 @@ namespace WinAuth2SDA.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
     internal sealed partial class GlobalConfig : global::System.Configuration.ApplicationSettingsBase {
         
         private static GlobalConfig defaultInstance = ((GlobalConfig)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new GlobalConfig())));
@@ -44,6 +44,18 @@ namespace WinAuth2SDA.Properties {
             }
             set {
                 this["WinAuth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Upgraded {
+            get {
+                return ((bool)(this["Upgraded"]));
+            }
+            set {
+                this["Upgraded"] = value;
             }
         }
     }

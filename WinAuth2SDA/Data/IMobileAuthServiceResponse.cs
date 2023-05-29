@@ -1,19 +1,19 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace WinAuth2SDA.Data
 {
     public sealed record IMobileAuthServiceResponse
     {
-        [JsonPropertyName("response")]
+        [JsonProperty(PropertyName = "response")]
         public ResponseTokenData? Response { get; set; }
     }
 
     public sealed record ResponseTokenData
     {
-        [JsonPropertyName("token")]
+        [JsonProperty(PropertyName = "token")]
         public string? Token { get; set; }
 
-        [JsonPropertyName("token_secure")]
+        [JsonProperty(PropertyName = "token_secure")]
         public string? TokenSecure { get; set; }
     }
 }

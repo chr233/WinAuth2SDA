@@ -1,19 +1,20 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace WinAuth2SDA.Data
 {
     public sealed record ManifestEntryData
     {
-        [JsonPropertyName("encryption_iv")]
+        [JsonProperty(PropertyName = "encryption_iv")]
         public string? EncryptionIv { get; set; }
 
-        [JsonPropertyName("encryption_salt")]
+        [JsonProperty(PropertyName = "encryption_salt")]
         public string? EncryptionSalt { get; set; }
 
-        [JsonPropertyName("filename")]
+        [JsonProperty(PropertyName = "filename")]
         public string? FileName { get; set; }
 
-        [JsonPropertyName("steamid")]
-        public long SteamId { get; set; }
+        [JsonProperty(PropertyName = "steamid")]
+        public ulong SteamId { get; set; }
     }
 }

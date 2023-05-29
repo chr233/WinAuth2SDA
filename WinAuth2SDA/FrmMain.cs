@@ -1,17 +1,10 @@
 using System.Diagnostics;
-using System.Net;
-using System.Net.Http.Json;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
-using System.Xml;
 using WinAuth2SDA.Data;
 using WinAuth2SDA.Properties;
-using System.Resources;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Collections;
+using Newtonsoft.Json;
+using System.Xml;
 
 namespace WinAuth2SDA
 {
@@ -47,7 +40,17 @@ namespace WinAuth2SDA
             var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version("0.0.0.0");
             tsVersion.Text = $"版本: {version}";
             tsGithub.Text = "获取源码";
-            txtWinAuthFile.Text = GlobalConfig.Default.WinAuth;
+
+            var config = GlobalConfig.Default;
+
+            if (!config.Upgraded)
+            {
+                config.Upgrade();
+                config.Upgraded = true;
+                config.Save();
+            }
+
+            txtWinAuthFile.Text = config.WinAuth;
             if (string.IsNullOrEmpty(txtWinAuthFile.Text))
             {
                 var winAuth = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WinAuth", "winauth.xml");
@@ -60,14 +63,16 @@ namespace WinAuth2SDA
                     MessageBox.Show("自动识别 winauth.xml 路径失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-            txtMaFolder.Text = GlobalConfig.Default.MaFolder;
+            txtMaFolder.Text = config.MaFolder;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            GlobalConfig.Default.MaFolder = txtMaFolder.Text;
-            GlobalConfig.Default.WinAuth = txtWinAuthFile.Text;
-            GlobalConfig.Default.Save();
+            var config = GlobalConfig.Default;
+
+            config.MaFolder = txtMaFolder.Text;
+            config.WinAuth = txtWinAuthFile.Text;
+            config.Save();
         }
 
         private void btnMaFolder_Click(object sender, EventArgs e)
@@ -182,8 +187,8 @@ namespace WinAuth2SDA
                     string body = HexString2String(parts[3]);
                     string extra = HexString2String(parts[4]);
 
-                    var authData = JsonSerializer.Deserialize<WinAuthData>(body);
-                    var authSession = !string.IsNullOrEmpty(extra) ? JsonSerializer.Deserialize<WinAuthSessionData>(extra) : null;
+                    var authData = JsonConvert.DeserializeObject<WinAuthData>(body);
+                    var authSession = !string.IsNullOrEmpty(extra) ? JsonConvert.DeserializeObject<WinAuthSessionData>(extra) : null;
 
                     if (authData == null)
                     {
@@ -207,7 +212,7 @@ namespace WinAuth2SDA
                         TokenGid = authData.TokenGid,
                         IdentitySecret = authData.IdentitySecret,
                         Secret1 = authData.Secret1,
-                        status = authData.status,
+                        Status = authData.status,
                         FullyEnrolled = true,
                         DeviceId = device,
                     };
@@ -258,7 +263,7 @@ namespace WinAuth2SDA
                         //    loginSecure = tokenData?.Response?.TokenSecure;
                         //}
 
-                        if (!long.TryParse(authSession.SteamId, out long steamId))
+                        if (!ulong.TryParse(authSession.SteamId, out var steamId))
                         {
                             if (MessageBox.Show(string.Format("{0} 不是有效的Steam ID\r\n确认 - 继续运行, 取消 - 终止操作", authSession.SteamId), "错误", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
                             {
@@ -298,12 +303,12 @@ namespace WinAuth2SDA
                     if (!exist || MessageBox.Show(string.Format("{0} 已存在, 是否覆盖?\r\n是 - 覆盖文件, 否 - 跳过该文件", filePath), "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         using var maStream = File.Open(filePath, exist ? FileMode.Truncate : FileMode.CreateNew, FileAccess.Write);
-                        var configJson = JsonSerializer.Serialize(maFile);
+                        var configJson = JsonConvert.SerializeObject(maFile, Newtonsoft.Json.Formatting.Indented);
                         await maStream.WriteAsync(Encoding.UTF8.GetBytes(configJson));
                         await maStream.FlushAsync();
                     }
                 }
-                catch (Exception ex)
+                catch (IOException ex)
                 {
                     if (MessageBox.Show(string.Format("{0} 出现意外错误\r\n确认 - 继续运行, 取消 - 终止操作", ex.Message), ex.ToString(), MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
                     {
@@ -350,7 +355,7 @@ namespace WinAuth2SDA
                 return;
             }
 
-            var sdaEntries = new Dictionary<long, ManifestEntryData>();
+            var sdaEntries = new Dictionary<ulong, ManifestEntryData>();
 
             string manifestPath = Path.Combine(maFolder, "manifest.json");
             bool exist = File.Exists(manifestPath);
@@ -361,7 +366,10 @@ namespace WinAuth2SDA
                 try
                 {
                     using var maStream = File.Open(manifestPath, FileMode.Open, FileAccess.Read);
-                    manifest = await JsonSerializer.DeserializeAsync<ManifestData>(maStream);
+                    var tmp = new byte[maStream.Length];
+                    await maStream.ReadAsync(tmp);
+                    var txt = Encoding.UTF8.GetString(tmp);
+                    manifest = JsonConvert.DeserializeObject<ManifestData>(txt);
                     if (manifest?.Entries != null)
                     {
                         foreach (var entry in manifest.Entries)
@@ -392,7 +400,10 @@ namespace WinAuth2SDA
                 try
                 {
                     using var maStream = File.Open(filePath, FileMode.Open, FileAccess.Read);
-                    var maFile = await JsonSerializer.DeserializeAsync<MaFileData>(maStream);
+                    var tmp = new byte[maStream.Length];
+                    await maStream.ReadAsync(tmp);
+                    var txt = Encoding.UTF8.GetString(tmp);
+                    var maFile = JsonConvert.DeserializeObject<MaFileData>(txt);
                     var steamId = maFile?.Session?.SteamID;
                     if (steamId != null)
                     {
@@ -421,7 +432,7 @@ namespace WinAuth2SDA
             manifest.Entries = sdaEntries.Values.ToList();
 
             using var msStream = File.Open(manifestPath, exist ? FileMode.Truncate : FileMode.CreateNew, FileAccess.Write);
-            var json = JsonSerializer.Serialize(manifest);
+            var json = JsonConvert.SerializeObject(manifest, Newtonsoft.Json.Formatting.Indented);
             await msStream.WriteAsync(Encoding.UTF8.GetBytes(json));
             await msStream.FlushAsync();
 

@@ -1,25 +1,25 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace WinAuth2SDA.Data
 {
     public sealed record SessionData
     {
-        [JsonPropertyName("SessionID")]
+        [JsonProperty(PropertyName = "SessionID")]
         public string? SessionID { get; set; }
 
-        [JsonPropertyName("SteamLogin")]
+        [JsonProperty(PropertyName = "SteamLogin")]
         public string? SteamLogin { get; set; }
 
-        [JsonPropertyName("SteamLoginSecure")]
+        [JsonProperty(PropertyName = "SteamLoginSecure")]
         public string? SteamLoginSecure { get; set; }
 
-        [JsonPropertyName("WebCookie")]
+        [JsonProperty(PropertyName = "WebCookie")]
         public string? WebCookie { get; set; }
 
-        [JsonPropertyName("OAuthToken")]
+        [JsonProperty(PropertyName = "OAuthToken")]
         public string? OAuthToken { get; set; }
 
-        [JsonPropertyName("SteamID")]
-        public long SteamID { get; set; }
+        [JsonProperty(PropertyName = "SteamID")]
+        public ulong SteamID { get; set; }
     }
 }
