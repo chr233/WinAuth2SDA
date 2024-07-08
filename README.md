@@ -16,6 +16,12 @@
 [![Steam](https://img.shields.io/badge/steam-donate-1B2838.svg?logo=steam)](https://steamcommunity.com/tradeoffer/new/?partner=221260487&token=xgqMgL-i)
 [![爱发电](https://img.shields.io/badge/爱发电-chr__-ea4aaa.svg?logo=github-sponsors)](https://afdian.net/@chr233)
 
-![img](resources/screenshot.png)
+## 导出步骤
 
-WinAuth 令牌无损导出到 SDA (需要禁用加密)
+先禁用 WinAuth 的加密
+
+![img](resources/screenshot2.png)
+
+再使用软件导出, 如果有报错说明没解除加密
+
+![img](resources/screenshot.png)
