@@ -1,10 +1,12 @@
+using Newtonsoft.Json;
+
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using System.Xml;
+
 using WinAuth2SDA.Data;
 using WinAuth2SDA.Properties;
-using Newtonsoft.Json;
-using System.Xml;
 
 namespace WinAuth2SDA
 {
@@ -184,7 +186,7 @@ namespace WinAuth2SDA
                 try
                 {
                     string device = HexString2String(parts[2]);
-                    string body = HexString2String(parts[3]);
+                    string body = HexString2String(parts[3]).Replace("undefined", "null");
                     string extra = HexString2String(parts[4]);
 
                     var authData = JsonConvert.DeserializeObject<WinAuthData>(body);
@@ -202,12 +204,17 @@ namespace WinAuth2SDA
                         }
                     }
 
+                    if (!long.TryParse(authData.ServerTime, out var serverTime))
+                    {
+                        serverTime = 0;
+                    }
+
                     var maFile = new MaFileData {
                         SharedSecret = authData.SharedSecret,
                         SerialNumber = authData.SerialNumber,
                         RevocationCode = authData.RevocationCode,
                         Uri = authData.Uri,
-                        ServerTime = authData.ServerTime,
+                        ServerTime = serverTime,
                         AccountName = authData.AccountName,
                         TokenGid = authData.TokenGid,
                         IdentitySecret = authData.IdentitySecret,

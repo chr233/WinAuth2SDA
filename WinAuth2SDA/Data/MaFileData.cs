@@ -17,7 +17,7 @@ namespace WinAuth2SDA.Data
         public string? Uri { get; set; }
 
         [JsonProperty(PropertyName = "server_time")]
-        public ulong ServerTime { get; set; }
+        public long ServerTime { get; set; }
 
         [JsonProperty(PropertyName = "account_name")]
         public string? AccountName { get; set; }
@@ -32,7 +32,7 @@ namespace WinAuth2SDA.Data
         public string? Secret1 { get; set; }
 
         [JsonProperty(PropertyName = "status")]
-        public int Status { get; set; }
+        public int? Status { get; set; }
 
         [JsonProperty(PropertyName = "device_id")]
         public string? DeviceId { get; set; }
